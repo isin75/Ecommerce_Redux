@@ -42,6 +42,27 @@ server.get('/api/v1/goods', async (req, res) => {
   }
 })
 
+server.get('/api/v1/goods/:type/:direction', async (req, res) => {
+  const { type, direction } = req.params
+  try {
+    const getGoods = await readFile(`${__dirname}/data/data.json`, { encoding: 'utf-8' }).then(
+      (data) => JSON.parse(data)
+    )
+    const sortedList = getGoods.sort((a, b) => {
+      if (direction === 'min') {
+        return type === 'price' ? a.price - b.price : a.title.localeCompare(b.title)
+      }
+      if (direction === 'max') {
+        return type === 'price' ? b.price - a.price : b.title.localeCompare(a.title)
+      }
+      return a.price - b.price
+    })
+    res.json(sortedList)
+  } catch (error) {
+    res.json({ status: '404', description: 'no data' })
+  }
+})
+
 server.get('/*', (req, res) => {
   const initialState = {
     location: req.url

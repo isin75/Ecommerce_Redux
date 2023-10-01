@@ -1,5 +1,6 @@
 import React from "react"
 import { Link } from "react-router-dom"
+import SortButton from "./common/sortButton"
 // import Cart from '../assets/svg/cart.svg'
 
 const Header = () => {
@@ -12,20 +13,7 @@ const Header = () => {
       <div className="w-1/3">{false}</div>
       <div className="w-1/3 flex">
         <div className="w-4/5 flex justify-end items-center">
-          <div className="flex mx-5">
-            <button className="mx-2 font-sans font-medium" type="button">
-              +/-
-            </button>
-            <button className="mx-2 font-sans font-medium" type="button">
-              -/+
-            </button>
-            <button className="mx-2 font-sans font-medium" type="button">
-              A-Z
-            </button>
-            <button className="mx-2 font-sans font-medium" type="button">
-              Z-A
-            </button>
-          </div>
+          <SortButton />
           <button className="mr-2 font-sans font-medium" type="button">
             USD
           </button>

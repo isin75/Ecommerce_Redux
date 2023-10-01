@@ -4,20 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { getGoods } from '../../redux/reducers/goods'
 
 const ProductCard = () => {
-  const goodsList = useSelector((store) => store.goods.listOfGoods)
-  const currentPage = useSelector((store) => store.goods.currentPage)
-  const goodsOnPage = useSelector((store) => store.goods.goodsOnPage)
+  const { listOfGoods, currentPage, goodsOnPage, loaded } = useSelector((store) => store.goods)
   const dispatch = useDispatch()
 
   const lastIndexOnPage = currentPage * goodsOnPage
   const firstIndexOnPage = lastIndexOnPage - goodsOnPage
-  const currentGoods = goodsList.slice(firstIndexOnPage, lastIndexOnPage)
+  const currentGoods = listOfGoods.slice(firstIndexOnPage, lastIndexOnPage)
 
   useEffect(() => {
-   dispatch(getGoods())
+    if (!loaded) {
+      dispatch(getGoods())
+    }
     return () => {}
   }, [])
-
   return (
     <div className="flex flex-wrap justify-center">
       {currentGoods.map((goods) => (
@@ -30,7 +29,9 @@ const ProductCard = () => {
           <div className="currency">{goods.price}</div>
           <div className="flex flex-col justify-center mt-auto">
             <div className="card__product-amount">goods in cart</div>
-            <button className="border border-solid border-black mb-2" type="button">Add</button>
+            <button className="border border-solid border-black mb-2" type="button">
+              Add
+            </button>
           </div>
         </div>
       ))}
