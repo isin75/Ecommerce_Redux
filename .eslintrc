@@ -32,6 +32,7 @@
     "ENABLE_SOCKETS": true
   },
   "rules": {
+      "default-param-last": 0,
     "react/no-unstable-nested-components": [
       "warn",
       { "allowAsProps": true }
@@ -85,5 +86,5 @@
     "react/jsx-props-no-spreading": ["off"],
     "camelcase": "off"
 
-  }
+  },
 }

@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser'
 import config from './config'
 import Html from '../client/html'
 
+const { readFile } = require('fs').promises
+
 require('colors')
 
 let connections = []
@@ -29,6 +31,15 @@ server.get('/', (req, res) => {
     <h2>This is SkillCrucial Express Server!</h2>
     <h3>Client hosted at <a href="http://localhost:8087">localhost:8087</a>!</h3>
   `)
+})
+
+server.get('/api/v1/goods', async (req, res) => {
+  try {
+    const getGoods = await readFile(`${__dirname}/data/data.json`, { encoding: 'utf-8' }).then((data) => JSON.parse(data))
+    res.json(getGoods)
+  } catch (error) {
+    res.json({ status: '404', description: "no data"})
+  }
 })
 
 server.get('/*', (req, res) => {
