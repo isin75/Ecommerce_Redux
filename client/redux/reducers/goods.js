@@ -1,20 +1,26 @@
 const GET_GOODS = 'ecommerce/goods/GET_GOODS'
 const NEW_PAGE = 'ecommerce/goods/NEW_PAGE'
-const FILTER = 'ecommerce/goods/FILTER'
+const FILTER_PRICE = 'ecommerce/goods/FILTER_PRICE'
+const FILTER_TITLE = 'ecommerce/goods/FILTER_TITLE'
 const LOADED = 'ecommerce/goods/LOADED'
-// const FILTER_Z_A = 'ecommerce/goods/FILTER_Z_A'
-// const FILTER_MIN_MAX = 'ecommerce/goods/FILTER_MIN_MAX'
+const GET_CURRENCY = 'ecommerce/goods/GET_CURRENCY'
+const CURRENCY = 'ecommerce/goods/CURRENCY'
+const ADD_CART = 'ecommerce/goods/ADD_CART'
 // const FILTER_MAX_MIN = 'ecommerce/goods/FILTER_MAX_MIN'
 
 const initialState = {
   listOfGoods: [],
+  listOfCart: [],
   currentPage: 1,
   goodsOnPage: 15,
-  currency: 'USD',
-  sort: {
-    type: 'price',
-    direction: 'min'
-  },
+  currency: 'EUR',
+  rates: {
+        USD: 1.056943,
+        EUR: 1,
+        CAD: 1.434356
+    },
+  sortPrice: 'min',
+  sortTitle: 'max',
   loaded: false
 }
 
@@ -32,20 +38,42 @@ export default (state = initialState, action) => {
         currentPage: action.payload
       }
     }
-    case FILTER: {
+    case FILTER_PRICE: {
       return {
         ...state,
         listOfGoods: action.payload,
-        sort: {
-          type: action.sortType,
-          direction: action.sortDirection
-        }
+        sortPrice: action.sortDirection
+      }
+    }
+    case FILTER_TITLE: {
+      return {
+        ...state,
+        listOfGoods: action.payload,
+        sortTitle: action.sortDirection
       }
     }
     case LOADED: {
       return {
         ...state,
         loaded: action.payload
+      }
+    }
+    case GET_CURRENCY: {
+      return {
+        ...state,
+        rates: action.payload
+      }
+    }
+    case CURRENCY: {
+      return {
+        ...state,
+        currency: action.payload
+      }
+    }
+    case ADD_CART: {
+      return {
+        ...state,
+        listOfCart: action.payload
       }
     }
     default:
@@ -71,6 +99,24 @@ export function filter(sortType, sortDirection) {
   return async (dispatch) => {
     const sortUrl = `/api/v1/goods/${sortType}/${sortDirection}`
     const filteredList = await fetch(sortUrl).then((data) => data.json())
-    return dispatch({ type: FILTER, payload: filteredList, sortType, sortDirection })
+    return sortType === 'price' ?
+      dispatch({ type: FILTER_PRICE, payload: filteredList, sortDirection }) :
+      dispatch({ type: FILTER_TITLE, payload: filteredList, sortDirection })
   }
+}
+
+export function getCurrency() {
+  return async (dispatch) => {
+    const currencyUrl = '/api/v1/currency'
+    const currency = await fetch(currencyUrl).then((data) => data.json())
+    return dispatch({ type: GET_CURRENCY, payload: currency.rates})
+  }
+}
+
+export function setCurrency(currency) {
+  return { type: CURRENCY, payload: currency }
+}
+
+export function addToCart(currency) {
+  return { type: ADD_CART, payload: currency }
 }

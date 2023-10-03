@@ -3,6 +3,7 @@ import path from 'path'
 import cors from 'cors'
 import sockjs from 'sockjs'
 import cookieParser from 'cookie-parser'
+import axios from 'axios'
 
 import config from './config'
 import Html from '../client/html'
@@ -39,6 +40,27 @@ server.get('/api/v1/goods', async (req, res) => {
     res.json(getGoods)
   } catch (error) {
     res.json({ status: '404', description: "no data"})
+  }
+})
+
+server.get('/api/v1/currency', async (req, res) => {
+  try {
+    const apiUrl =
+      'http://apiы.exchangerateы.hostы/latest?access_key=08d45ce49e57a9e1806b2fb63f795e06&format=1&base=EUR&symbols=USD,EUR,CAD'
+    const currency = await axios(apiUrl).then((resp) => resp.data)
+    res.json(currency)
+  } catch (error) {
+    res.json({
+      success: true,
+      timestamp: 1696249323,
+      base: 'EUR',
+      date: '2023-10-02',
+      rates: {
+        USD: 1.053313,
+        EUR: 1,
+        CAD: 1.434244
+      }
+    })
   }
 })
 

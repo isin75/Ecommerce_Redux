@@ -15,7 +15,10 @@ const Pagination = () => {
     <div>
       <ul className="flex justify-center items-end m-1">
         {Array.from({ length: Math.ceil(goodsList.length / goodsOnPage) }).map((_, index) => (
-          <li key={index} className="mx-1">
+          <li
+            key={index}
+            className="mx-1 border border-solid bg-gray-300 w-8 flex justify-center items-center rounded-md"
+          >
             <button type="button" onClick={() => paginate(index + 1)}>
               {index + 1}
             </button>
