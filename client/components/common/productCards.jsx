@@ -27,7 +27,7 @@ const ProductCard = () => {
       {currentGoods.map((goods) => (
         <div
           key={goods.id}
-          className="card h-[350px] w-[255px] m-2 bg-white flex flex-col justify-center items-center border-4 border-solid"
+          className="card h-[350px] w-[255px] m-2 bg-gray-100 flex flex-col justify-center items-center border-4 border-solid"
         >
           <img className="card__price" src={goods.image} alt={goods.title} />
           <div className="flex flex-col justify-center items-center mt-auto">

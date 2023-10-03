@@ -10,7 +10,14 @@ const ADD_CART = 'ecommerce/goods/ADD_CART'
 
 const initialState = {
   listOfGoods: [],
-  listOfCart: [],
+  listOfCart: [{
+    id: "c7f6153d-5586-495c-beb2-4758bb8a6451",
+    title: "Beer - Labatt Blue",
+    image: "http://dummyimage.com/128x151.jpg/dddddd/000000",
+    price: 10,
+    description: "recontextualize rich eyeballs",
+    quantity: 1
+  }],
   currentPage: 1,
   goodsOnPage: 15,
   currency: 'EUR',

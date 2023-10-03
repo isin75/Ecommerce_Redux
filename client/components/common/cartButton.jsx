@@ -10,7 +10,7 @@ const CartButton = () => {
     }, 0)
     .toFixed(2)
   return (
-    <Link to='/cart' className="w-1/5 flex justify-center items-center font-sans font-bold border-l-2 border-solid border-gray-600">
+    <Link to='/cart' className="w-1/5 flex justify-center items-center font-sans font-bold border-l-2 border-solid border-gray-400 px-4 mx-2">
       {totalSum > 0 ? `Cart(${totalSum})` : '<Cart />'}
     </Link>
   )
