@@ -8,7 +8,7 @@ import axios from 'axios'
 import config from './config'
 import Html from '../client/html'
 
-const { readFile, writeFile } = require('fs').promises
+const { readFile, writeFile, unlink } = require('fs').promises
 
 require('colors')
 
@@ -102,6 +102,15 @@ server.post('/api/v1/logs', async (req, res) => {
       encoding: 'utf-8'
     })
     res.json(req.body)
+  }
+})
+
+server.delete('/api/v1/logs', async (req, res) => {
+  try {
+  unlink(`${__dirname}/data/logs/logs.json`)
+  res.json({ logs: 'deleted' })
+  } catch (error) {
+    res.json({ logs: 'not found' })
   }
 })
 
