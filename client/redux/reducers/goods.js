@@ -1,3 +1,5 @@
+import { CHANGE_CURRENCY, ADD_GOODS, SORT, ACTION } from '../middleware/logs'
+
 const GET_GOODS = 'ecommerce/goods/GET_GOODS'
 const NEW_PAGE = 'ecommerce/goods/NEW_PAGE'
 const FILTER_PRICE = 'ecommerce/goods/FILTER_PRICE'
@@ -6,7 +8,6 @@ const LOADED = 'ecommerce/goods/LOADED'
 const GET_CURRENCY = 'ecommerce/goods/GET_CURRENCY'
 const CURRENCY = 'ecommerce/goods/CURRENCY'
 const ADD_CART = 'ecommerce/goods/ADD_CART'
-// const FILTER_MAX_MIN = 'ecommerce/goods/FILTER_MAX_MIN'
 
 const initialState = {
   listOfGoods: [],
@@ -94,6 +95,7 @@ export function getGoods() {
         return fetch(goodsUrl).then((data) => data.json()).then((products) => {
           dispatch({ type: GET_GOODS, payload: products })
           dispatch({ type: LOADED, payload: true })
+          dispatch({ type: ACTION })
         })
   }
 }
@@ -106,9 +108,15 @@ export function filter(sortType, sortDirection) {
   return async (dispatch) => {
     const sortUrl = `/api/v1/goods/${sortType}/${sortDirection}`
     const filteredList = await fetch(sortUrl).then((data) => data.json())
-    return sortType === 'price' ?
-      dispatch({ type: FILTER_PRICE, payload: filteredList, sortDirection }) :
-      dispatch({ type: FILTER_TITLE, payload: filteredList, sortDirection })
+    return sortType === 'price'
+      ? [
+          dispatch({ type: FILTER_PRICE, payload: filteredList, sortDirection }),
+          dispatch({ type: SORT, sortDirection })
+        ]
+      : [
+          dispatch({ type: FILTER_TITLE, payload: filteredList, sortDirection }),
+          dispatch({ type: SORT, sortDirection })
+        ]
   }
 }
 
@@ -121,9 +129,23 @@ export function getCurrency() {
 }
 
 export function setCurrency(currency) {
-  return { type: CURRENCY, payload: currency }
+  return (dispatch, getState) => {
+    const previous = getState().goods.currency
+    dispatch({ type: CURRENCY, payload: currency })
+    dispatch({
+      type: CHANGE_CURRENCY,
+      payload: {
+        previousCurrency: previous,
+        newCurrency: currency
+      }
+    })
+  }
 }
 
-export function addToCart(currency) {
-  return { type: ADD_CART, payload: currency }
+export function addToCart(currency, id) {
+  const { title } = currency.find((goods) => goods.id === id)
+  return (dispatch) => {
+    dispatch({ type: ADD_CART, payload: currency })
+    dispatch({ type: ADD_GOODS, payload: title })
+  }
 }

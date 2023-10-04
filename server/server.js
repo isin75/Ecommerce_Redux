@@ -8,7 +8,7 @@ import axios from 'axios'
 import config from './config'
 import Html from '../client/html'
 
-const { readFile } = require('fs').promises
+const { readFile, writeFile } = require('fs').promises
 
 require('colors')
 
@@ -36,10 +36,12 @@ server.get('/', (req, res) => {
 
 server.get('/api/v1/goods', async (req, res) => {
   try {
-    const getGoods = await readFile(`${__dirname}/data/data.json`, { encoding: 'utf-8' }).then((data) => JSON.parse(data))
+    const getGoods = await readFile(`${__dirname}/data/data.json`, { encoding: 'utf-8' }).then(
+      (data) => JSON.parse(data)
+    )
     res.json(getGoods)
   } catch (error) {
-    res.json({ status: '404', description: "no data"})
+    res.json({ status: '404', description: 'no data' })
   }
 })
 
@@ -82,6 +84,24 @@ server.get('/api/v1/goods/:type/:direction', async (req, res) => {
     res.json(sortedList)
   } catch (error) {
     res.json({ status: '404', description: 'no data' })
+  }
+})
+
+server.post('/api/v1/logs', async (req, res) => {
+  const newLog = req.body.text
+  try {
+    const logs = await readFile(`${__dirname}/data/logs/logs.json`, { encoding: 'utf-8' })
+    .then((response) => JSON.parse(response))
+    const addLog = [...logs, newLog]
+    await writeFile(`${__dirname}/data/logs/logs.json`, JSON.stringify(addLog), {
+      encoding: 'utf-8'
+    })
+    res.json({ addLog })
+  } catch (error) {
+    await writeFile(`${__dirname}/data/logs/logs.json`, JSON.stringify([newLog]), {
+      encoding: 'utf-8'
+    })
+    res.json(req.body)
   }
 })
 

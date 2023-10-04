@@ -161,7 +161,8 @@
     },
     "nodemonConfig": {
         "ignore": [
-            "*.hot-update.json"
+            "*.hot-update.json",
+            "./server/data/logs/logs.json"
         ]
     }
 }

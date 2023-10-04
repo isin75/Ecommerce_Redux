@@ -34,7 +34,7 @@ const CartCards = () => {
   }
 
   const handleClickPlus = (id) => {
-    dispatch(addToCart(upCount(id)))
+    dispatch(addToCart(upCount(id), id))
   }
 
   const handleClickMinus = (id) => {
@@ -42,7 +42,7 @@ const CartCards = () => {
   }
 
   const handleClickRemove = (id) => {
-    dispatch(addToCart(remove(id)))
+    dispatch(addToCart(remove(id), id))
   }
   return (
     <div className="flex flex-col items-end w-[65%]">
